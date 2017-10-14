@@ -1,0 +1,1 @@
+# article-jpa-native-query
