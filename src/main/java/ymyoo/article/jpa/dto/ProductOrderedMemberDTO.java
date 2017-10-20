@@ -1,5 +1,7 @@
 package ymyoo.article.jpa.dto;
 
+import java.math.BigInteger;
+
 public class ProductOrderedMemberDTO {
     private Long productId;
     private String productName;
@@ -9,13 +11,14 @@ public class ProductOrderedMemberDTO {
     private Long memberId;
     private String memberName;
 
-    public ProductOrderedMemberDTO(Long productId, String productName, int price, int stockAmount, Long orderId, Long memberId, String memberName) {
-        this.productId = productId;
+    public ProductOrderedMemberDTO(BigInteger productId, String productName, Integer price, Integer stockAmount,
+                                   BigInteger orderId, BigInteger memberId, String memberName) {
+        this.productId = productId == null ? null : productId.longValue();
         this.productName = productName;
         this.price = price;
         this.stockAmount = stockAmount;
-        this.orderId = orderId;
-        this.memberId = memberId;
+        this.orderId = orderId == null ? null : orderId.longValue();
+        this.memberId = memberId == null ? null : memberId.longValue();
         this.memberName = memberName;
     }
 

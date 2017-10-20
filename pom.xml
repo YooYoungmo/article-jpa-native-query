@@ -29,6 +29,12 @@
             <version>${h2.database.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>ch.simas.qlrm</groupId>
+            <artifactId>qlrm</artifactId>
+            <version>1.6.9</version>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>

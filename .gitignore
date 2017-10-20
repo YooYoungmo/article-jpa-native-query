@@ -26,3 +26,4 @@ hs_err_pid*
 /.idea/
 /jpa-native-query.iml
 /target/
+/jpa.native-query.iml

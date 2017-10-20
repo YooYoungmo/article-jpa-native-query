@@ -2,6 +2,7 @@ package ymyoo.article.jpa;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.qlrm.mapper.JpaResultMapper;
 import ymyoo.article.jpa.dto.ProductOrderedMemberDTO;
 import ymyoo.article.jpa.entitiy.Member;
 import ymyoo.article.jpa.entitiy.Order;
@@ -141,12 +142,12 @@ public class NativeQueryTest {
         List<Object[]> resultList = nativeQuery.getResultList();
 
         List<ProductOrderedMemberDTO> products = resultList.stream().map(product -> new ProductOrderedMemberDTO(
-                ((BigInteger) product[0]).longValue(),
+                ((BigInteger)product[0]),
                 (String) product[1],
                 (Integer) product[2],
                 (Integer) product[3],
-                product[4] == null ? null : ((BigInteger)product[4]).longValue(),
-                product[5] == null ? null : ((BigInteger)product[5]).longValue(),
+                ((BigInteger)product[4]),
+                ((BigInteger)product[5]),
                 (String) product[6])).collect(Collectors.toList());
 
         // then
@@ -181,6 +182,57 @@ public class NativeQueryTest {
         em.close();
     }
 
+    @Test
+    public void test_상품별_구매한_회원_목록_조회_by_QLRM() {
+        // given
+        setUpTestFixture();
 
+        // when
+        EntityManager em = emf.createEntityManager();
 
+        String sql = "SELECT \"product\".\"product_id\" AS productId, \"product\".\"name\" AS productName, \"product\".\"price\", \n" +
+                "    \"product\".\"stock_amount\" AS stockAmount, \"order\".\"order_id\" AS orderId,\n" +
+                "    \"member\".\"member_id\" AS memberId, \"member\".\"name\" AS memberName\n" +
+                "FROM \"product\" \n" +
+                "    LEFT JOIN \"order\" \n" +
+                "        ON \"product\".\"product_id\" = \"order\".\"PRODUCT_ID\"\n" +
+                "    LEFT JOIN \"member\" \n" +
+                "        ON \"order\".\"MEMBER_ID\" = \"member\".\"member_id\"";
+
+        Query nativeQuery = em.createNativeQuery(sql);
+
+        JpaResultMapper jpaResultMapper = new JpaResultMapper();
+        List<ProductOrderedMemberDTO> products = jpaResultMapper.list(nativeQuery, ProductOrderedMemberDTO.class);
+
+        // then
+        Assert.assertEquals(5, products.size());
+
+        int index = 0;
+
+        Assert.assertEquals(1l, products.get(index).getProductId().longValue());
+        Assert.assertEquals("Headphones", products.get(index).getProductName());
+        Assert.assertEquals(1l, products.get(index).getMemberId().longValue());
+
+        index++;
+        Assert.assertEquals(2l, products.get(index).getProductId().longValue());
+        Assert.assertEquals("Earphones", products.get(index).getProductName());
+        Assert.assertEquals(1l, products.get(index).getMemberId().longValue());
+
+        index++;
+        Assert.assertEquals(3l, products.get(index).getProductId().longValue());
+        Assert.assertEquals("Watch", products.get(index).getProductName());
+        Assert.assertEquals(2l, products.get(index).getMemberId().longValue());
+
+        index++;
+        Assert.assertEquals(4l, products.get(index).getProductId().longValue());
+        Assert.assertEquals("Pad", products.get(index).getProductName());
+        Assert.assertEquals(2l, products.get(index).getMemberId().longValue());
+
+        index++;
+        Assert.assertEquals(5l, products.get(index).getProductId().longValue());
+        Assert.assertEquals("Pad2", products.get(index).getProductName());
+        Assert.assertNull(products.get(index).getMemberId());
+
+        em.close();
+    }
 }

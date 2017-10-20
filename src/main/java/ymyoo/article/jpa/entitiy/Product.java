@@ -3,18 +3,19 @@ package ymyoo.article.jpa.entitiy;
 import ymyoo.article.jpa.dto.ProductOrderedMemberDTO;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 
 @SqlResultSetMapping(
         name="ProductOrderedMemberMapping",
         classes = @ConstructorResult(
                 targetClass = ProductOrderedMemberDTO.class,
                 columns = {
-                        @ColumnResult(name="productId", type = Long.class),
+                        @ColumnResult(name="productId", type = BigInteger.class),
                         @ColumnResult(name="productName", type = String.class),
                         @ColumnResult(name="price", type = Integer.class),
                         @ColumnResult(name="stockAmount", type = Integer.class),
-                        @ColumnResult(name="orderId", type = Long.class),
-                        @ColumnResult(name="memberId", type = Long.class),
+                        @ColumnResult(name="orderId", type = BigInteger.class),
+                        @ColumnResult(name="memberId", type = BigInteger.class),
                         @ColumnResult(name="memberName", type = String.class),
                 })
 )
